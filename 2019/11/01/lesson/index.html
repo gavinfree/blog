@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.3',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="0x01 前言手头有一个VPS，为最大化利用它，俺决定搭建一个简单的基于VPS的Hexo博客">
+<meta name="keywords" content="购买域名 设置NS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建Hexo博客（一）">
+<meta property="og:url" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;index.html">
+<meta property="og:site_name" content="费曼学习博客">
+<meta property="og:description" content="0x01 前言手头有一个VPS，为最大化利用它，俺决定搭建一个简单的基于VPS的Hexo博客">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;dns.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;bijia.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;sousuo.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;gouwuche.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;guanli.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;jiexi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;shezhi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;shezhi2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;shezhi3.png">
+<meta property="og:updated_time" content="2019-11-01T13:57:06.106Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;01&#x2F;lesson&#x2F;dns.jpg">
+
+<link rel="canonical" href="https://521024.xyz/2019/11/01/lesson/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>搭建Hexo博客（一） | 费曼学习博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">费曼学习博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://521024.xyz/2019/11/01/lesson/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/poohbear.jpg">
+      <meta itemprop="name" content="Gavin Ou">
+      <meta itemprop="description" content="多看书 多思考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="费曼学习博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          搭建Hexo博客（一）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-01 18:33:29 / 修改时间：21:57:06" itemprop="dateCreated datePublished" datetime="2019-11-01T18:33:29+08:00">2019-11-01</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>手头有一个VPS，为最大化利用它，俺决定搭建一个简单的基于VPS的Hexo博客</p>
+<a id="more"></a>
+
+<h1 id="0x02-准备"><a href="#0x02-准备" class="headerlink" title="0x02 准备"></a>0x02 准备</h1><blockquote>
+<ul>
+<li>一台VPS(自行准备，应当能够进行ssh连接，并知道root密码)</li>
+<li>一个可以解析的域名</li>
+<li>几个小时的时间</li>
+</ul>
+</blockquote>
+<h1 id="0x03-购买域名"><a href="#0x03-购买域名" class="headerlink" title="0x03 购买域名"></a>0x03 购买域名</h1><h2 id="域名的意义"><a href="#域名的意义" class="headerlink" title="域名的意义"></a>域名的意义</h2><p>在购买域名之前需要了解访问域名的流程<br>               <img src="/2019/11/01/lesson/dns.jpg" class="" title="简易域名解析示意图"><br>人们熟悉的域名对于机器来说毫无意义，在网络中真正具有含义的是<strong>IP地址</strong>，它由 4个8bit的数字组成(IPv4)，但是这些数字非常不利于人们记忆，因此就有了域名。而将域名和IP地址联系在一起的就是DNS。以访问<a href="https://www.baidu.com" target="_blank" rel="noopener"> 百度 </a>为例, 浏览器在接收到访问指令后，根据系统设置的DNS，发出UDP流量包访问DNS服务器，DNS服务器在接收到访问后会返回一个数据包，其中就包含“百度”这个域名对应的IP地址。当然，实际情况比这复杂的多，因为公网中的IP地址非常多，仅靠一台服务器是远远无法进行解析服务的，事实上，DNS是一个非常庞大的服务器集群。像百度这类比较常用的域名，有大量分布式的服务器有记录(还有CDN服务)。因此，在访问这些网址时，查询速度很快，访问速度也很快，当在一般的DNS上无法查询到IP地址后，DNS会向上级更大的服务器提出查询，一层层查询，这就大大增加了访问时间。因此，使用一个国外的DNS服务需要接受较慢的网站访问速度。为提高访问速度，可以使用国内的CDN服务等，但是这需要你的域名进行<strong>备案</strong>和<strong>实名认证</strong>。</p>
+<h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>国内外有很多域名服务商，比较有名的有<a href="https://www.godaddy.com/" target="_blank" rel="noopener">Godaddy</a>，<a href="https://www.name.com/" target="_blank" rel="noopener">name</a>，<a href="https://www.namecheap.com/" target="_blank" rel="noopener">namecheap</a>，国内的<a href="https://wanwang.aliyun.com/" target="_blank" rel="noopener">万网</a>，<a href="https://buy.cloud.tencent.com/domain" target="_blank" rel="noopener">腾讯云</a>等，但是需要注意国内购买域名需要备案。因此，俺选择了在<a href="https://www.namesilo.com/" target="_blank" rel="noopener">namesilo</a>购买域名。事实上，对于诸如本站这种数字域名，国外几大域名服务商都有比较优惠的价格，在2019年上半年，name还曾经有1刀10年的性价比爆炸的域名可以购买。在黑色星期五，万圣节和圣诞节这些国外节日可以多关注域名优惠。提到便宜域名就不得不提一下域名的历史，在互联网的早期，并没有那么多的顶级域名，所谓顶级域名是诸如com,net,org这样的网址结尾，但随着互联网的发展，更多的顶级域名被接受，比较有名的有tk，ml，ga，xyz之类的。虽然它们的价值可能比不上com结尾的域名，但好歹是个顶级域名。</p>
+<p>俺还发现一个国外的<a href="https://www.domcomp.com/" target="_blank" rel="noopener">域名比价网站</a>，可以实时查询各家域名提供商的优惠券和各个顶级域名的价格，不过需要注意<strong>1&amp;1</strong>，据说是个非常烂的提供商，不要踩雷。访问某些中文支持不好的域名服务网站时可能需要一些帮助。</p>
+<img src="/2019/11/01/lesson/bijia.png" class="" title="不同域名优惠价格">
+
+<img src="/2019/11/01/lesson/sousuo.png" class="">
+<p>上面是俺在namesilo中随便搜索的一个数字域名，可以看到xyz域名是最便宜的，com域名也不贵。在选择了域名之后，选中前面的复选框，点击下面的<strong>REGISTER CHECKED DOMAINS</strong>进入下一步。这里俺不得不吐槽一下namesilo的界面，表面看上去是个光鲜亮丽的网站，实际上背地里是个10年前的老网站。</p>
+<img src="/2019/11/01/lesson/gouwuche.png" class="" title="购物车界面">
+<p>购物车界面上方是一些配置，需要注意的是<strong>Auto-Renew</strong>，这东西相当于自动续订，而大部分域名是有首年优惠的，第二年开始的价格可能会难以接受。另一个比较重要的设置是<strong>Privacy Setting</strong>，因为WHOIS的存在，只要你注册了域名，你的注册信息就可以被所有人查到，而namesilo提供了永久免费的隐私保护。一些域名提供商的隐私保护价格非常高昂(没错，说的就是狗爹)。这些选项也可以在购买域名之后配置。<br>左下方处可以填写优惠券，但是没有适合俺们这个小订单($0.77)的。<br>OK！可以点击<strong>Continue</strong>继续了，这一步需要你注册一下账号，填写基本信息，写个差不多就行。然后就可以付款了。需要注意的是，在最终的支付环节,大部分国外域名服务商只支持<strong>信用卡</strong>和<strong>信用卡认证的PayPal</strong>，使用储蓄卡认证的PayPal账号都没办法进行支付。因此，尽量选择支持支付宝的服务商。俺选择的namesilo不仅支持储蓄卡认证的PayPal还支持支付宝，对国人还算比较友好。</p>
+<h1 id="设置DNS"><a href="#设置DNS" class="headerlink" title="设置DNS"></a>设置DNS</h1><p>购买域名之后就要将域名和VPS的IP地址绑定起来。为此需要使用DNS服务，namesilo本身提供了DNS服务，俺使用了之后发现速度还可以接受，因此就没有使用第三方的DNS服务。对于想要使用第三方服务的筒子们。国外的<a href="https://dns.he.net" target="_blank" rel="noopener">HE</a>，国内的<a href="http://www.dnspod.cn/Domain" target="_blank" rel="noopener">DNSPod</a>都是免费的，且口碑不错。不过使用国内免费DNS服务需要面对某些不可抗力。俺只需要自带的namesilo服务，因此在管理界面中选择域名管理。</p>
+<img src="/2019/11/01/lesson/guanli.png" class="" title="域名管理">
+<p>然后选择解析</p>
+<img src="/2019/11/01/lesson/jiexi.png" class="" title="域名解析">
+<p>你会发现namesilo已经生成了4条记录。先删除最后两个记录，只需要修改前两个A记录。</p>
+<img src="/2019/11/01/lesson/shezhi.png" class="" title="域名解析">
+<p>第一条A记录不需要填写hostname，IPv4Address填写VPS的地址。</p>
+<img src="/2019/11/01/lesson/shezhi2.png" class="" title="域名解析">
+<p>第二条需要在hostname处填写www，事实上，这是一个CNAME，因为www是一个二级域名。同样填写VPS地址。最终得到的两条记录应该是这样的。</p>
+<img src="/2019/11/01/lesson/shezhi3.png" class="" title="域名解析">
+<p>到此，域名的购买和解析已经搞定了，只需要等待半至一个小时让DNS解析生效即可。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%B4%AD%E4%B9%B0%E5%9F%9F%E5%90%8D-%E8%AE%BE%E7%BD%AENS/" rel="tag"># 购买域名 设置NS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/01/lesson1/" rel="next" title="搭建Hexo博客">
+                  <i class="fa fa-chevron-left"></i> 搭建Hexo博客
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-前言"><span class="nav-number">1.</span> <span class="nav-text">0x01 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-准备"><span class="nav-number">2.</span> <span class="nav-text">0x02 准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-购买域名"><span class="nav-number">3.</span> <span class="nav-text">0x03 购买域名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#域名的意义"><span class="nav-number">3.1.</span> <span class="nav-text">域名的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#购买域名"><span class="nav-number">3.2.</span> <span class="nav-text">购买域名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置DNS"><span class="nav-number">4.</span> <span class="nav-text">设置DNS</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Gavin Ou"
+    src="/images/poohbear.jpg">
+  <p class="site-author-name" itemprop="name">Gavin Ou</p>
+  <div class="site-description" itemprop="description">多看书 多思考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gavin Ou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.4.3
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
