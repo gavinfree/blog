@@ -54,13 +54,14 @@
 </script>
 
   <meta name="description" content="开启全站https访问并支持http2">
+<meta name="keywords" content="https,ssl证书,http2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="搭建Hexo博客（三）">
 <meta property="og:url" content="https:&#x2F;&#x2F;521024.xyz&#x2F;2019&#x2F;11&#x2F;03&#x2F;lesson2&#x2F;index.html">
 <meta property="og:site_name" content="费曼学习博客">
 <meta property="og:description" content="开启全站https访问并支持http2">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-02T23:59:06.518Z">
+<meta property="og:updated_time" content="2019-11-03T09:44:13.171Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://521024.xyz/2019/11/03/lesson2/">
@@ -145,6 +146,16 @@
     <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
@@ -201,7 +212,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-11-03 06:45:34 / 修改时间：07:59:06" itemprop="dateCreated datePublished" datetime="2019-11-03T06:45:34+08:00">2019-11-03</time>
+              <time title="创建时间：2019-11-03 06:45:34 / 修改时间：17:44:13" itemprop="dateCreated datePublished" datetime="2019-11-03T06:45:34+08:00">2019-11-03</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,8 +220,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hexo%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index">
-                    <span itemprop="name">Hexo博客</span>
+                  <a href="/categories/%E6%90%AD%E5%BB%BAHexo%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index">
+                    <span itemprop="name">搭建Hexo博客</span>
                   </a>
                 </span>
             </span>
@@ -221,14 +232,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>62</span>
+              <span>2.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -244,7 +255,33 @@
 <p>开启全站https访问并支持http2</p>
 </blockquote>
 <a id="more"></a>
-<p>$$\sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6}$$</p>
+
+<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>为了紧跟潮流，在完成博客搭建之后，俺还想着开启全站https访问并且支持http2协议，在一定程度上保证访问安全，提升访问速度（虽然没有国内CDN服务访问速度不可能快）。</p>
+<h1 id="0x02-开启https访问"><a href="#0x02-开启https访问" class="headerlink" title="0x02 开启https访问"></a>0x02 开启https访问</h1><h2 id="https协议"><a href="#https协议" class="headerlink" title="https协议"></a>https协议</h2><p>https协议是使用ssl/tls加密的http协议，可以大幅度降低信息窃听、信息篡改和信息劫持的风险，更加安全。更加详细的对https协议的介绍可以自行搜索。</p>
+<h2 id="申请ssl证书"><a href="#申请ssl证书" class="headerlink" title="申请ssl证书"></a>申请ssl证书</h2><p>由于前几年的赛门铁克错误签发大量CA证书引发的问题，谨慎选择一个靠谱的CA证书签发机构是很有必要的。俺选择了比较有名的免费证书签发机构Let’s Encrypt来申请ssl证书。俺使用的是比较老的办法，筒子们可以使用官方的一键脚本进行证书申请。<br>首先，ssh连接VPS<br>选择一个地方创建ssl文件夹来存放脚本和生成的证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /data/ssl</span><br><span class="line"><span class="built_in">cd</span> /data/ssl</span><br></pre></td></tr></table></figure>
+<p>下载签证脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/xdtianyu/scripts/master/lets-encrypt/letsencrypt.conf</span><br><span class="line">wget https://raw.githubusercontent.com/xdtianyu/scripts/master/lets-encrypt/letsencrypt.sh</span><br><span class="line">chmod +x letsencrypt.sh</span><br></pre></td></tr></table></figure>
+<p>修改脚本配置<code>vi letsencrypt.conf</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ACCOUNT_KEY=<span class="string">"letsencrypt-account.key"</span></span><br><span class="line">DOMAIN_KEY=<span class="string">"example.com.key"</span></span><br><span class="line">DOMAIN_DIR=<span class="string">"/var/www/example.com"</span></span><br><span class="line">DOMAINS=<span class="string">"DNS:example.com,DNS:whatever.example.com"</span></span><br><span class="line"><span class="comment">#ECC=TRUE</span></span><br><span class="line"><span class="comment">#LIGHTTPD=TRUE</span></span><br></pre></td></tr></table></figure>
+<p>其中，<br>DOMAIN_KEY 修改为你的域名；<br>DOMAIN_DIR 修改为你域名在VPS上绑定的目录，<strong>绝对路径</strong>；<br>DOMAINS 修改为你要签证的域名，多个域名用英文逗号隔开。<br>需要注意，签证的域名必须对应服务器上的同一个目录才可以同时签证，否则需要再配置一个新的配置文件。务必保证域名填写正确，因为签证过程中会验证域名根目录下的文件夹。<br>在ssh上执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./letsencrypt.sh letsencrypt.conf</span><br></pre></td></tr></table></figure>
+<p>如果签证成功，会在ssl文件夹中生成以下新文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">lets-encrypt-x1-cross-signed.pem</span><br><span class="line">example.chained.crt             <span class="comment"># 又名 fullchain.pem</span></span><br><span class="line">example.com.key                 <span class="comment"># 又名 privkey.pem </span></span><br><span class="line">example.crt</span><br><span class="line">example.csr</span><br></pre></td></tr></table></figure>
+<p>Let’s Encrypt的证书有效期为90天，因此需要在VPS上添加自动续签证书的任务，运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+<p>添加新任务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 5 1 * * /data/ssl/letsencrypt.sh /data/ssl/letsencrypt.conf &gt;&gt; /data/ssl/letsencrypt.log 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>每月1号5时0分，VPS将自动执行证书签发任务，并且将脚本输出和错误信息记录在log文件中</p>
+<h2 id="修改nginx配置"><a href="#修改nginx配置" class="headerlink" title="修改nginx配置"></a>修改nginx配置</h2><p>修改上篇博客中提到的nginx配置文件，具体位置在<code>/etc/nginx/sites-available</code><br><strong>添加</strong>服务器配置段：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	    <span class="comment"># SSL configuration</span></span><br><span class="line">        listen 443 ssl;  <span class="comment"># 1.1版本后这样写</span></span><br><span class="line">        server_name example.com; <span class="comment">#填写绑定证书的域名</span></span><br><span class="line">        ssl_certificate /data/ssl/example.chained.crt;  <span class="comment"># 指定证书的位置，绝对路径</span></span><br><span class="line">        ssl_certificate_key /data/ssl/example.com.key;  <span class="comment"># 绝对路径，同上</span></span><br><span class="line">        ssl_session_timeout 5m;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2; <span class="comment">#按照这个协议配置</span></span><br><span class="line">        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;<span class="comment">#按照这个套件配置</span></span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">        location / &#123;</span><br><span class="line">            root   /var/www/blog; <span class="comment">#站点目录，绝对路径</span></span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>保存配置后重启nginx服务，就可以以https:// 的形式访问网站了，如果想要实现http强制跳转到https,需要修改之前的配置段:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen     80;       </span><br><span class="line">	server_name example.com;</span><br><span class="line">	<span class="comment"># 跳转到HTTPS</span></span><br><span class="line">	<span class="built_in">return</span>	301 https://<span class="variable">$server_name</span><span class="variable">$request_uri</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至此俺已经开启了全站https访问。</p>
+<h1 id="0x03-添加http2协议支持"><a href="#0x03-添加http2协议支持" class="headerlink" title="0x03 添加http2协议支持"></a>0x03 添加http2协议支持</h1><h2 id="http2协议"><a href="#http2协议" class="headerlink" title="http2协议"></a>http2协议</h2><p>http2协议是http1.1的升级版，可以大幅提高网站访问速度，具体原理和内容可以自行搜索，现在的主流浏览器都已经支持http2协议。</p>
+<h2 id="添加http2协议支持"><a href="#添加http2协议支持" class="headerlink" title="添加http2协议支持"></a>添加http2协议支持</h2><p>修改上述nginx服务器配置文件为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen 443 ssl http2 default_server;</span><br></pre></td></tr></table></figure>
+<p>就可以方便地开启http2协议支持。这需要你的nginx程序在编译的时候具有<code>--with-http_v2_module</code>参数，同时，编译所使用的openssl程序也应当能支持http2，这两点可以在<code>nginx --version</code>中查看。如果发现nginx服务器无法支持http2协议，那么就可能需要更新openssl程序，重新下载编译nginx程序。俺直接安装的nginx程序在修改配置之后可以直接支持http2协议。在配置完所有步骤后可以使用这个<a href="https://www.ssllabs.com/ssltest/index.html" target="_blank" rel="noopener">网站</a>来检测网站ssl安全性和协议支持。</p>
 
     </div>
 
@@ -253,6 +290,12 @@
     
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/https/" rel="tag"><i class="fa fa-tag"></i> https</a>
+              <a href="/tags/ssl%E8%AF%81%E4%B9%A6/" rel="tag"><i class="fa fa-tag"></i> ssl证书</a>
+              <a href="/tags/http2/" rel="tag"><i class="fa fa-tag"></i> http2</a>
+          </div>
 
         
 
@@ -304,6 +347,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-前言"><span class="nav-number">1.</span> <span class="nav-text">0x01 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-开启https访问"><span class="nav-number">2.</span> <span class="nav-text">0x02 开启https访问</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#https协议"><span class="nav-number">2.1.</span> <span class="nav-text">https协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#申请ssl证书"><span class="nav-number">2.2.</span> <span class="nav-text">申请ssl证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改nginx配置"><span class="nav-number">2.3.</span> <span class="nav-text">修改nginx配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-添加http2协议支持"><span class="nav-number">3.</span> <span class="nav-text">0x03 添加http2协议支持</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#http2协议"><span class="nav-number">3.1.</span> <span class="nav-text">http2协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加http2协议支持"><span class="nav-number">3.2.</span> <span class="nav-text">添加http2协议支持</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -325,12 +369,14 @@
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
+          
         <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">5</span>
+          
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -365,13 +411,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">6k</span>
+    <span title="站点总字数">9k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">11 分钟</span>
+    <span title="站点阅读时长">16 分钟</span>
 </div>
 
         
@@ -438,54 +484,6 @@ if (document.querySelectorAll('pre.mermaid').length) {
   
 
   
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 
