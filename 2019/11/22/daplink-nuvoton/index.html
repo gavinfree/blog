@@ -61,7 +61,7 @@
 <meta property="og:site_name" content="费曼学习博客">
 <meta property="og:description" content="最近发现ARM发布了DAPLink v2，同时添加了新唐单片机的官方支持，因此俺决定刷一个新唐的DAPLink">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-22T14:39:52.144Z">
+<meta property="og:updated_time" content="2019-11-28T14:57:57.148Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://521024.xyz/2019/11/22/daplink-nuvoton/">
@@ -210,10 +210,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2019-11-22 20:14:25 / 修改时间：22:39:52" itemprop="dateCreated datePublished" datetime="2019-11-22T20:14:25+08:00">2019-11-22</time>
+              <time title="创建时间：2019-11-22 20:14:25" itemprop="dateCreated datePublished" datetime="2019-11-22T20:14:25+08:00">2019-11-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-28 22:57:57" itemprop="dateModified" datetime="2019-11-28T22:57:57+08:00">2019-11-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -232,7 +238,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.1k</span>
+              <span>3.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -264,7 +270,7 @@
 <li>CMSIS-DAP兼容的调试通道(HID)</li>
 <li>WEBUSB功能(WEBUSB HID)</li>
 </ul>
-<p>之前DAPLink被俺放弃的原因也在于它的下载速度慢，由于官方主要考虑移植的便捷性，故在下载速度的优化方面比不上jlink。举例来说，同样是使用Full Speed的USB协议，DAPLink使用Interrupt Endpoint进行传输，而jlink使用Bulk进行传输，但是DAPLink支持某些使用HighSpeed USB协议的单片机，这就弥补了DAPLink传输方面的劣势。支持HSUSB的单片机有Atmel的SAM3U2C，NXP的K26F和LPC4322，幸运的是，最近添加的新唐单片机也支持HSUSB。</p>
+<p>之前DAPLink被俺放弃的原因在于它的下载速度慢，由于官方主要考虑移植的便捷性，故在下载速度的优化方面比不上jlink。举例来说，同样是使用Full Speed的USB协议，DAPLink使用Interrupt Endpoint(v1版本)进行传输，而jlink使用bulk进行传输。但是v2版本的daplink已经加入了对bulk传输的支持，这大大提升了普通型号主控的daplink的下载速度。同时DAPLink支持某些使用HighSpeed USB协议的单片机，有Atmel的SAM3U2C，NXP的K26F和LPC4322，幸运的是，最近添加的新唐单片机也支持HSUSB。</p>
 <h1 id="刷入准备"><a href="#刷入准备" class="headerlink" title="刷入准备"></a>刷入准备</h1><p>虽然官方添加的新唐单片机型号为<strong>M48SSIDAE</strong>，这个单片机是新唐m252开发板上自带的nulink-me2的主控芯片。俺找了半天选型表也没发现这个型号，因此猜测这型号应该是出厂自带固件的单片机，与m480系列的其他单片机没有区别，毕竟新唐之前也干过类似的事。俺的新唐单片机型号为<strong>M485SIDAE</strong>，经过测试，可以完美使用例程，所以应该所有m480系列带HSUSB的单片机都可以使用这个程序。读者需要具备一定的软硬件能力和对新唐单片机的了解。单片机必须是m480系列，带HSUSB的型号。</p>
 <h1 id="软件准备"><a href="#软件准备" class="headerlink" title="软件准备"></a>软件准备</h1><p>为使用DAPLink程序，需要以下软件</p>
 <ul>
@@ -272,13 +278,13 @@
 <li>Git ，需要添加到PATH</li>
 <li>Keil MDK</li>
 </ul>
-<p><strong>注意</strong>：官方最新程序版本为0254，这个版本可以直接使用Python 2.7编译，如果使用Python 3，则需要修改一部分源码。历史版本则两者都可以直接编译。</p>
+<p><strong>注意</strong>：官方最新程序版本为0254，这个版本可以直接使用Python 2.7编译，如果使用Python 3，则需要修改一部分源码。历史版本则两者都可以直接编译。(<strong>更新：ARM已经修改了编译脚本源码，最新官方程序可以直接使用Python 3编译</strong>)</p>
 <h2 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h2><p>选择合适的文件夹后逐行运行以下代码</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/mbedmicro/DAPLink          //git项目到本地</span><br><span class="line"><span class="built_in">cd</span> DAPLink</span><br><span class="line">pip install virtualenv                             //安装虚拟环境</span><br><span class="line">virtualenv venv</span><br><span class="line">venv/Scripts/activate.bat</span><br><span class="line">pip install -r requirements.txt                    //安装必备软件</span><br><span class="line">progen generate -p m48ssidae_bl -t uvision         //产生mdk项目</span><br><span class="line">progen generate -p m48ssidae_numaker_m252kg_if -t uvision</span><br><span class="line">venv/Scripts/deactivate.bat</span><br></pre></td></tr></table></figure>
 <p>某几条指令可能需要较长的运行时间，请耐心等待。</p>
-<h2 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h2><p>在运行完以上代码后，在<strong>DAPLink</strong>文件夹下后生成一个<strong>projectfiles</strong>文件夹，进入其下的<strong>m48ssidae_bl</strong>，首先编译bootloader程序。在Keil MDK下打开项目，点击编译。幸运的情况下可以直接编译成功，生成固件。俺在编译的时候遇到了几个问题。<br><strong>问题一</strong>：MDK提示<strong>’fromelf‘不是内部或外部的命令…</strong><br><strong>解决</strong>：fromelf是keil自带的由axf文件生成bin文件的程序，仔细查看mdk的日志输出可以发现，在编译完项目之后，mdk执行了一个批处理文件，位置在<code>DAPLink\tools\post_build_script.bat</code>，编辑这个批处理文件，找到这一行<code>set PATH=%KEIL_ARM%\ARMCC\bin;%path%</code>，在这行之后添加安装的mdk目录，中间以<strong>;</strong>隔开，俺添加的是<code>;D:\Program Files (x86)\Keil\ARM\ARMCC\bin</code>。这个问题的原因是本应该添加到PATH的目录没有生效，所以没有办法调用fromelf程序。<br><strong>问题二</strong>：MDK提示</p>
+<h2 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h2><p>在运行完以上代码后，在<strong>DAPLink</strong>文件夹下后生成一个<strong>projectfiles</strong>文件夹，进入其下的<strong>m48ssidae_bl</strong>，首先编译bootloader程序。在Keil MDK下打开项目，点击编译。幸运的情况下可以直接编译成功，生成固件。俺在编译的时候遇到了几个问题。<br><strong>问题一</strong>：MDK提示<strong>’fromelf‘不是内部或外部的命令…</strong><br><strong>解决</strong>：fromelf是keil自带的由axf文件生成bin文件的程序，仔细查看mdk的日志输出可以发现，在编译完项目之后，mdk执行了一个批处理文件，位置在<code>DAPLink\tools\post_build_script.bat</code>，编辑这个批处理文件，找到这一行<code>set PATH=%KEIL_ARM%\ARMCC\bin;%path%</code>，在这行之后添加安装的mdk目录，中间以<strong>;</strong>隔开，俺添加的是<code>;D:\Program Files (x86)\Keil\ARM\ARMCC\bin</code>。这个问题的原因是本应该添加到PATH的目录没有生效，所以没有办法调用fromelf程序。<br><strong>问题二(已得到官方解决)</strong>：MDK提示</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">File “……\tools\post_build_script.py”, line 144</span><br><span class="line">pack_flash_algo.symbols[‘EraseChip’] + blob_header_size + flash_blob_entry if pack_flash_algo.symbols[‘EraseChip’] != 0xffffffffL else 0,</span><br></pre></td></tr></table></figure>
-<p><strong>解决</strong>：这是由于之前提到的0254版本不能使用Python3编译的问题，主要是因为Python2.7和3的某些语法不一样。找到<code>post_build_script.py</code>，将其中所有的<code>0xffffffffL</code>修改为<code>0xffffffff</code>。由于Python2快要过维护期，因此俺选择修改文件来适应Python3，这样修改后的文件同样无法被Python2编译。<br><strong>问题三</strong>：MDK提示<code>....\tools\flash_algo.py中找不到StringIO模块</code><br><strong>解决</strong>：这同样是由于语法不同导致的错误。找到<code>flash_algo.py</code>，将其中的<code>import StringIO</code>修改为<code>from io import StringIO</code><br>解决完这三个问题后，可以完成bl的编译。</p>
+<p><strong>解决</strong>：这是由于之前提到的0254版本不能使用Python3编译的问题，主要是因为Python2.7和3的某些语法不一样。找到<code>post_build_script.py</code>，将其中所有的<code>0xffffffffL</code>修改为<code>0xffffffff</code>。由于Python2快要过维护期，因此俺选择修改文件来适应Python3，这样修改后的文件同样无法被Python2编译。<br><strong>问题三(已得到官方解决)</strong>：MDK提示<code>....\tools\flash_algo.py中找不到StringIO模块</code><br><strong>解决</strong>：这同样是由于语法不同导致的错误。找到<code>flash_algo.py</code>，将其中的<code>import StringIO</code>修改为<code>from io import StringIO</code><br>解决完这三个问题后，可以完成bl的编译。</p>
 <h2 id="下载程序"><a href="#下载程序" class="headerlink" title="下载程序"></a>下载程序</h2><p>完成bl的源码编译后，连接下载器和新唐单片机。虽然这个程序是bootloader，但是不需要下载到新唐单片机的LDROM中，而是<strong>APROM</strong>。下载完成之后，拔掉下载器，连接新唐单片机的HSUSB和电脑，电脑应当能弹出一个叫<code>MAINTENANCE</code>的U盘，里面有一个网页和一个<code>defaults.txt</code>，txt文件记录了目前DAPLink的状态和参数，详细配置教程可以在项目github的<a href="https://github.com/ARMmbed/DAPLink/blob/master/docs/MSD_COMMANDS.md" target="_blank" rel="noopener">doc</a>中查看。<br>同样的，编译完if项目，在<code>build</code>文件夹中找到<code>m48ssidae_numaker_m252kg_if_crc.bin</code>，必须使用<strong>crc</strong>结尾的bin文件才能成功刷入。将这个bin文件直接拖入U盘中，等待它重启，或者重新插拔一下，就会发现，电脑弹出一个<code>DAPLink</code>的U盘，并且在设备管理器中也会发现一个串口。这样，一个DAPLink就刷好了。8.32.1版本以上的IAR和5.29版本的MDK可以识别v2版本的DAPLink。</p>
 <h1 id="功能修改"><a href="#功能修改" class="headerlink" title="功能修改"></a>功能修改</h1><p>这样刷入程序的DAPLink只能使用SWD接口，且没有SWO功能，因此需要修改源码。主要修改的文件在<code>DAPLink\source\hic_hal\nuvoton\m48ssidae</code>文件夹中，修改<code>IO_Config.h</code>可以修改SWD对应的引脚，同时，JTAG和SWO引脚也可以自行定义。修改之后需要在同文件夹下的<code>DAP_config.h</code>中使能和定义相应的引脚行为。DAPLink自带的虚拟串口在UART0，需要在uart的初始化程序中进行修改，同时还可以修改指示状态的LED引脚和行为。<br>v2版本的DAPLink支持的最大SWD频率为10Mhz，同时由于使用了HSUSB连接，所以在下载速度方面与jlink v9，v10以及stlink v3的速度相差无几，实用性比较高，同时完全开源，没有版权问题，用起来比较安心。</p>
 
