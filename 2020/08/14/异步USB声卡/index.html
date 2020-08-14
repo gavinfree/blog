@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-material.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.3',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="俺最近对HiFi产生了巨大的兴趣，遂制作了一个USB声卡">
+<meta name="keywords" content="nuvoton,Asynchronous USB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异步USB声卡">
+<meta property="og:url" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;index.html">
+<meta property="og:site_name" content="费曼学习博客">
+<meta property="og:description" content="俺最近对HiFi产生了巨大的兴趣，遂制作了一个USB声卡">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;1.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;3.bmp">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;4.bmp">
+<meta property="og:updated_time" content="2020-08-14T06:33:45.489Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;2.png">
+
+<link rel="canonical" href="https://gavinfree.gitee.io/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>异步USB声卡 | 费曼学习博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">费曼学习博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gavinfree.gitee.io/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/poohbear.jpg">
+      <meta itemprop="name" content="Gavin Ou">
+      <meta itemprop="description" content="多看书 多思考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="费曼学习博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          异步USB声卡
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-14 12:54:06 / 修改时间：14:33:45" itemprop="dateCreated datePublished" datetime="2020-08-14T12:54:06+08:00">2020-08-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DIY/" itemprop="url" rel="index">
+                    <span itemprop="name">DIY</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>俺最近对HiFi产生了巨大的兴趣，遂制作了一个USB声卡</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="0x01时钟域冲突"><a href="#0x01时钟域冲突" class="headerlink" title="0x01时钟域冲突"></a>0x01时钟域冲突</h1><p>制作USB 声卡的一个最大的问题是USB时钟域和IIS时钟域会发生冲突。一般而言，单片机的USB需要48MHz的高精度时钟源，而单片机内部的RC时钟源不足够提供USB所需的时钟精度，因此在使用USB功能时需要外接12MHz的晶振。<br>与之冲突的是音频部分IIS电路需要多个不同的时钟频率以应对不同的音频采样频率。如12.288MHz对应32,48,96kHz，而11.2896MHz对应44.1kHz的采样频率。单片机在内部没有小数PLL的情况下，无法提供准确的IIS时钟频率，这就很不hifi了。<br>一般的解决方法是单片机用来USB通信，实现UAC协议，而另外使用CPLD或者FPGA外接音频有源晶振进行音频时钟信号的重建并与DAC芯片通信，实现时钟域的隔离。这虽然足够HiFi，但是对钱包不友好。</p>
+<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/2.png" class="">
+
+<p>块头看着大，实际浪费很多，当然玩HiFi的可能不在乎这点┑(￣Д ￣)┍</p>
+<p>上个月的某一天，俺在去年新唐一折活动买的单片机里面搜搜找找，发现了一款可以完美适合HiFiUSB音频应用的单片机。总共有三个系列的单片机可以满足需求，分别是NUC121/125/126。它们具有的一个共有的特点是Crystal-less USB，aka 它们内部已经内建高精度48MHzRC振荡电路，可以无需外接晶振。这就给俺的低成本HiFi声卡提供一个很大的帮助。<br>具体的时钟分配是这样的：单片机内部48MHz频率作为系统的主频，提供CPU时钟，USB时钟以及必要的其余外设时钟；而得益于SPI/IIS模块时钟的异步性，俺使用外部晶振接口连接外部的音频有源晶振，并且外部时钟晶振只作为SPI/IIS模块的时钟源。这样就完美解决了时钟域冲突的问题，并且控制了制作成本。<br>如果要选择另外的替代单片机时，需要注意必须是内建usb时钟的型号，同时SPI/IIS外设的时钟能够与系统时钟异步。某些stm32的单片机型号虽然有无晶振设计，但是它的IIS外设时钟与系统时钟同源。那么在切换外部晶振的情况下，系统时钟也会随之改变，必须要做相应的保护性措施，以免程序运行出错。</p>
+<h1 id="0x02电路设计"><a href="#0x02电路设计" class="headerlink" title="0x02电路设计"></a>0x02电路设计</h1><p>USB声卡长这样</p>
+<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/1.jpg" class="">
+<p>特点多多:</p>
+<ul>
+<li>使用CS4328芯片，集成度高，内建DAC，滤波，输出放大级，最高能够驱动400Ohm的负载</li>
+<li>隔离设计，使用5V-&gt;±5V隔离电源，USB通信使用ADum3160隔离，最极致的hifi，不受外部usb供电影响</li>
+<li>采用5x5cm的四层板设计，完整的模拟地平面，完全参考数据手册设计，不同电源域进行隔离与单点连接</li>
+<li>外接两颗有源晶振，12.288MHz与11.2896MHz，对应32,48kHz和44.1kHz采样频率。晶振的切换使用圣邦微的模拟开关，模拟开关带宽300MHz，不会影响时钟信号</li>
+<li>完整的保护措施，usb防静电TVS芯片，750ma自恢复保险丝</li>
+<li>使用uac1.0协议，工作在异步音频模式，带有feedback端点</li>
+</ul>
+<p>总体来说，得益于高集成度的DAC芯片，俺不需要设计一般DAC后面那一系列电路，这大大减少了电路设计的难度。同时，绘制四层板也比两层板简单很多。当然自古第一版电路都会有各种各样的问题，这个声卡最大的问题是没有板载音量控制芯片，只能通过电脑端解码的音量条来控制。因此俺会时不时被系统的提示音吓一跳…下一版电路(如果有的话)会加入PGA2311芯片。</p>
+<p>声卡使用的有源晶振</p>
+<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/3.bmp" class="">
+
+<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/4.bmp" class="">
+
+<h1 id="0x03程序设计"><a href="#0x03程序设计" class="headerlink" title="0x03程序设计"></a>0x03程序设计</h1><p>这个声卡得益于异步时钟源的特性只需要编写单片机的程序，不需要写Verilog，难度比较小。这款新唐单片机自带的是FullSpeed USB，已经足够满足现有音频采样率的传输速率。如果后续升级电路，传输24bit/192kHz的音频，则需要使用HighSpeed USB，当然ADum3160只支持FS USB，如果使用HS USB的话，得换用隔离芯片，隔离IIS信号。<br>这个声卡工作在UAC1.0协议，这个协议是多个系统(win,macos,linux)默认支持的，而UAC2.0需要自行安装驱动程序。UAC1.0协议的等时传输中，支持带有反馈端点的异步传输模式，但是俺发现同步传输模式也不会影响声音播放，因为事实上，音频时钟域与USB时钟域是隔离的，并不会互相影响。<br>这个声卡程序的重点在于配置描述符的编写。需要参考usb.org网站上的<a href="https://www.usb.org/document-library/audio-device-class-spec-basic-audio-devices-v10-and-adopters-agreement" target="_blank" rel="noopener">audio1.0协议文件</a>编写。如果需要声卡工作在异步模式，还需要配置反馈端点的相关描述符。USB的驱动程序可以参考新唐官方的USB驱动例程，简单修改即可。</p>
+<h1 id="0x04总结"><a href="#0x04总结" class="headerlink" title="0x04总结"></a>0x04总结</h1><p>这个声卡本身是一个很简单的DIY，但是俺听了这么多天感觉还是很不错的。这个设计比较有价值的地方在于利用了单片机自身的时钟域，在不对音频播放质量妥协的情况下，大大简化了电路设计。至于程序方面，参考官方例程和USB音频协议，编写难度不高。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/nuvoton/" rel="tag"><i class="fa fa-tag"></i> nuvoton</a>
+              <a href="/tags/Asynchronous-USB/" rel="tag"><i class="fa fa-tag"></i> Asynchronous USB</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/22/daplink-nuvoton/" rel="next" title="自制DAPLink">
+                  <i class="fa fa-chevron-left"></i> 自制DAPLink
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/08/14/%E7%9B%B4%E6%B5%81%E7%94%B5%E6%BA%90JBC%E7%84%8A%E5%8F%B0%E5%AE%8C%E5%85%A8%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%8D%97/" rel="prev" title="直流电源JBC焊台完全设计指南">
+                  直流电源JBC焊台完全设计指南 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01时钟域冲突"><span class="nav-number">1.</span> <span class="nav-text">0x01时钟域冲突</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02电路设计"><span class="nav-number">2.</span> <span class="nav-text">0x02电路设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03程序设计"><span class="nav-number">3.</span> <span class="nav-text">0x03程序设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04总结"><span class="nav-number">4.</span> <span class="nav-text">0x04总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Gavin Ou"
+    src="/images/poohbear.jpg">
+  <p class="site-author-name" itemprop="name">Gavin Ou</p>
+  <div class="site-description" itemprop="description">多看书 多思考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gavin Ou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">14k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">25 分钟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme: 'forest',
+      logLevel: 3,
+      flowchart: { curve: 'linear' },
+      gantt: { axisFormat: '%m/%d/%Y' },
+      sequence: { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
