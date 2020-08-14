@@ -63,9 +63,9 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;2.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;1.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;3.bmp">
-<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;4.bmp">
-<meta property="og:updated_time" content="2020-08-14T06:33:45.489Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;4.png">
+<meta property="og:updated_time" content="2020-08-14T06:53:35.937Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1&#x2F;2.png">
 
@@ -217,7 +217,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-08-14 12:54:06 / 修改时间：14:33:45" itemprop="dateCreated datePublished" datetime="2020-08-14T12:54:06+08:00">2020-08-14</time>
+              <time title="创建时间：2020-08-14 12:54:06 / 修改时间：14:53:35" itemprop="dateCreated datePublished" datetime="2020-08-14T12:54:06+08:00">2020-08-14</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,9 +279,9 @@
 </ul>
 <p>总体来说，得益于高集成度的DAC芯片，俺不需要设计一般DAC后面那一系列电路，这大大减少了电路设计的难度。同时，绘制四层板也比两层板简单很多。当然自古第一版电路都会有各种各样的问题，这个声卡最大的问题是没有板载音量控制芯片，只能通过电脑端解码的音量条来控制。因此俺会时不时被系统的提示音吓一跳…下一版电路(如果有的话)会加入PGA2311芯片。</p>
 <p>声卡使用的有源晶振</p>
-<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/3.bmp" class="">
+<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/3.png" class="">
 
-<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/4.bmp" class="">
+<img src="/2020/08/14/%E5%BC%82%E6%AD%A5USB%E5%A3%B0%E5%8D%A1/4.png" class="">
 
 <h1 id="0x03程序设计"><a href="#0x03程序设计" class="headerlink" title="0x03程序设计"></a>0x03程序设计</h1><p>这个声卡得益于异步时钟源的特性只需要编写单片机的程序，不需要写Verilog，难度比较小。这款新唐单片机自带的是FullSpeed USB，已经足够满足现有音频采样率的传输速率。如果后续升级电路，传输24bit/192kHz的音频，则需要使用HighSpeed USB，当然ADum3160只支持FS USB，如果使用HS USB的话，得换用隔离芯片，隔离IIS信号。<br>这个声卡工作在UAC1.0协议，这个协议是多个系统(win,macos,linux)默认支持的，而UAC2.0需要自行安装驱动程序。UAC1.0协议的等时传输中，支持带有反馈端点的异步传输模式，但是俺发现同步传输模式也不会影响声音播放，因为事实上，音频时钟域与USB时钟域是隔离的，并不会互相影响。<br>这个声卡程序的重点在于配置描述符的编写。需要参考usb.org网站上的<a href="https://www.usb.org/document-library/audio-device-class-spec-basic-audio-devices-v10-and-adopters-agreement" target="_blank" rel="noopener">audio1.0协议文件</a>编写。如果需要声卡工作在异步模式，还需要配置反馈端点的相关描述符。USB的驱动程序可以参考新唐官方的USB驱动例程，简单修改即可。</p>
 <h1 id="0x04总结"><a href="#0x04总结" class="headerlink" title="0x04总结"></a>0x04总结</h1><p>这个声卡本身是一个很简单的DIY，但是俺听了这么多天感觉还是很不错的。这个设计比较有价值的地方在于利用了单片机自身的时钟域，在不对音频播放质量妥协的情况下，大大简化了电路设计。至于程序方面，参考官方例程和USB音频协议，编写难度不高。</p>
@@ -381,7 +381,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -416,13 +416,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">14k</span>
+    <span title="站点总字数">22k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">25 分钟</span>
+    <span title="站点阅读时长">40 分钟</span>
 </div>
 
         
