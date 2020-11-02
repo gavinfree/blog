@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-material.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.3',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="当我们说烙铁性能优秀时，我们在说什么？">
+<meta name="keywords" content="JBC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于烙铁控温的一些想法">
+<meta property="og:url" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;11&#x2F;02&#x2F;%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95&#x2F;index.html">
+<meta property="og:site_name" content="费曼学习博客">
+<meta property="og:description" content="当我们说烙铁性能优秀时，我们在说什么？">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;11&#x2F;02&#x2F;%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95&#x2F;jbc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;11&#x2F;02&#x2F;%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95&#x2F;PID.png">
+<meta property="og:updated_time" content="2020-11-02T05:04:09.122Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2020&#x2F;11&#x2F;02&#x2F;%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95&#x2F;jbc.png">
+
+<link rel="canonical" href="https://gavinfree.gitee.io/2020/11/02/%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>关于烙铁控温的一些想法 | 费曼学习博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">费曼学习博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gavinfree.gitee.io/2020/11/02/%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/poohbear.jpg">
+      <meta itemprop="name" content="Gavin Ou">
+      <meta itemprop="description" content="多看书 多思考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="费曼学习博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于烙铁控温的一些想法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-02 10:27:11 / 修改时间：13:04:09" itemprop="dateCreated datePublished" datetime="2020-11-02T10:27:11+08:00">2020-11-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DIY/" itemprop="url" rel="index">
+                    <span itemprop="name">DIY</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>当我们说烙铁性能优秀时，我们在说什么？</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;俺始终认为，在烙铁的设计过程中，回温效果是最优先被考虑的。相比之下，控温精准度和2s化锡的重要性要略逊一筹。原因如下，2s化锡只能说明烙铁能够承受的最大加热功率比较大，以JBCC245为例，官方建议功率为130W，实际使用中可以到180W甚至更多。这与加热芯的电阻，加热电压，以及加热占空比有关。如果追求更快速的升温，俺完全可以使用48V电压，保证1s化锡。因此，这种片面的追求而不能带来很好的体验，并不是设计的主要考虑目的。其次，控温精准度对于烙铁来说也并非非常重要的因素。烙铁不同于其他的恒温控制系统，温度的偏移并不会带来很大的影响。对于恒温箱、恒温水箱，几摄氏度的偏移可能会使得名贵的热带鱼死亡；不同的是，对于烙铁来说，±10℃的温漂范围几乎不能给人带来直观的感知差别，只要你不设置在183℃的极限温度下，俺想正常人都不会吧。</p>
+<h1 id="回温"><a href="#回温" class="headerlink" title="回温"></a>回温</h1><h2 id="回温的硬件基础"><a href="#回温的硬件基础" class="headerlink" title="回温的硬件基础"></a>回温的硬件基础</h2><p>&emsp;&emsp;那么当我们在说回温的时候，我们到底在指什么？回温是这样的一个过程：<strong>当烙铁头工作面接触工作点，由于温差，热传导发生，温度下降。当温度传感器感知到温度的变化后，在下一个测温区间内，将温度信号反馈给控制器，控制器因此计算选择加大输出功率以尝试恢复温度传感器部位的温度。</strong>当我们讨论回温时，我们讨论的是对<strong>温度传感器</strong>部位的回温而不是工作面的实际温度。所谓的回温效果，体现在以下两个方面：一是烙铁头工作面失温到温度传感器感知到温度下降的<strong>时间差</strong>；二是温度传感器将温度信号反馈给控制器到控制器输出足够的补偿加热功率的<strong>时间差</strong>。前者是由烙铁头的硬件结构决定的，一般来说，对于电阻式的加热芯，一体式的加热芯感温效果要好于分体式的，这也就是t12和jbc烙铁头要优于936烙铁的<strong>硬件基础</strong>，所以你很难指责936焊台的回温能力，俺相信以它72W的加热功率，它的<strong>热电偶处</strong>的回温效果并不差，只是热电偶的回温效果并非我们所期待的。但是需要指出的是一体式烙铁头带来的是成本上的提升，t12的价格尚且不低，更不用说jbc的价格了。还有另外一种烙铁，单从工作原理上来说性能更加优秀，那就是奥科的焊台。奥科焊台是一个高频加热的烙铁，它的独特之处在于它的烙铁头。由于高频焊台的加热原理是谐振，需要加热线圈和烙铁头组成的谐振网络的谐振频率在控制器输出的范围内，才能输出较大的加热功率。奥科焊台正是利用这一点，使用特殊的<strong>低居里点温度</strong>的金属材料，使得烙铁在达到居里点温度之后，材料的磁性发生变化，导致谐振线圈失谐，而停止加热。这种变化是非常迅速而有效的，因此奥科焊台上并没有控温按钮，焊台的工作温度由烙铁头决定。但是需要指出的是，使用这种原理对于烙铁头的材料加工工艺要求达到一个很高的高度。由于材料的限制，很多奥科的烙铁头的居里点温度在400℃左右，在这种高温下，如果焊台不能很好的处理休眠与工作，那么烙铁头的工作寿命会非常有限。</p>
+<h2 id="回温的软件基础"><a href="#回温的软件基础" class="headerlink" title="回温的软件基础"></a>回温的软件基础</h2><img src="/2020/11/02/%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/jbc.png" class="">
+<p>&emsp;&emsp;针对电阻式加热芯来说，交流与直流加热并无显著差别。由于热电偶输出信号极其微小，仅有mV级别，那么工作时测温时不可行的。对于jbc来说，工作时的电流高达8A，那么电流经过热电偶与共用负极的引线时产生的压降就会显著影响热电偶的测量。因此，无论是交流加热还是直流加热，都必须等到电流为0时才能读取正确的热电偶电压值。对于交流来说，这个时机是<strong>交流过零点</strong>处，对于工频50Hz来说，最大的控温频率就是100Hz了，那么只要直流的pwm频率也能有100Hz，从效果来看，两者就没有太大的区别。直流控制的加热周期如上一篇文章所述，与MOS的关断时间以及加热线圈感应电压的释放有关，可靠的控制芯片能显著提高控制频率。<br>&emsp;&emsp;控温的大头除了硬件就是软件算法了。其实就俺而言，俺认为最优秀的回温算法就是二值式控制法。所谓二值式控制法，就是低于设定温度就加热，高于设定温度就关闭。先别急着反驳，让俺先说说为啥。上一章提到，回温的第二个时间差是看烙铁控制器何时能够输出<strong>足够的补偿功率</strong>来弥补烙铁的失温，对于控制器来说，当它感知到温度下降后，随即以<strong>最大功率</strong>加热直至温度回到设定值，仔细思考的话，有比这更迅速有效的回温吗？以PID算法作为对比，PID的输出值等于<strong>上一次的输出值</strong>加上P乘以<strong>设定值与实际值的差</strong>（这种情况下，P是主要的影响对象）。考虑前一时刻烙铁处于恒温状态，实际的输出值是一个较小的值，因为维持烙铁恒温不需要很大的输出功率，那么在烙铁失温之后，为了获得一个较大的补偿输出功率，后一项值要有显著的增大。那么无非是使用一个较大的P，或者一个较大的偏差。然而一个PID控制系统的P的大小是有限的，过于大的P值会使控制系统<strong>振荡</strong>。那么就需要一个较大的偏差，这个偏差就表现在烙铁的<strong>最大失温</strong>上，即烙铁头低于设定值一定温度时，加热功率才足够大。这样考虑的话，PID的<strong>回温效果</strong>如何能跟二值式控制相比？<br>&emsp;&emsp;在俺心中，二值式控制是效果最好的温控算法，但是它确实有很大的缺点，这个缺点就是它不能恒温，由于在低于温度时最大功率加热，它会有很大的过冲，它的温度曲线实际上是类似三角波的形状，温度设定值在中线偏下处。这对于校正温度非常不友好，同时也不能满足那些拿着测温仪，一度一度看温度准确性的人的癖好（虽然毫无意义）。</p>
+<h1 id="温控算法改进"><a href="#温控算法改进" class="headerlink" title="温控算法改进"></a>温控算法改进</h1><h2 id="针对软件的改进"><a href="#针对软件的改进" class="headerlink" title="针对软件的改进"></a>针对软件的改进</h2><p>&emsp;&emsp;如上一章所述，PID会导致较大的失温，而二值控制的恒温效果非常差，那么改进的算法就需要从两者之上找到平衡。相互妥协才是真理。为了相互妥协，首先，俺需要确定能接受的最大失温，以10℃为例。温差大于10℃则选择满功率加热，小于10℃时，则采用阶梯式加热，即逐步减小加热的功率以防止过冲。在温差低于5℃时，切换到PID控制，以保证恒温效果。这样，温控系统不仅能保证恒温效果，也能保证足够小的失温，提高回温能力。<img src="/2020/11/02/%E5%85%B3%E4%BA%8E%E7%83%99%E9%93%81%E6%8E%A7%E6%B8%A9%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/PID.png" class=""> &emsp;&emsp;但是这样设计的难点在于，如何把阶梯式加热的末端与PID控制光滑的连接在一起，因为如果处理不好，那么这个控制系统极易发生振荡。如上图所示，PID控制过程中有过冲也有温度降低的阶段，这个时候如果温度掉到阶梯式控温区，那么系统会发生振荡，不能恒温。</p>
+<h2 id="针对硬件的改进"><a href="#针对硬件的改进" class="headerlink" title="针对硬件的改进"></a>针对硬件的改进</h2><p>&emsp;&emsp;PID的一个比较大的问题在于，对于不同的烙铁头，它的温控曲线不一定一致，如果不能自整定，那么同一套参数作用于不同烙铁头的效果可能不一样。显而易见，同一加热功率对尖头和大马蹄的加热效果不同。那么是否有个参数可以影响温控呢。俺觉得可以从满功率加热阶段入手，对于不同的烙铁头，它们的热容不同，对于加热系统来说，热容就是热阻，因此考虑加热芯相同的情况，同一加热功率对不同烙铁头的温升速率是不同的。是否可以通过计算升温速率而判断烙铁头热容，进而对PID参数和阶梯式加热的功率进行一定的补偿，以保证不同的烙铁头有相似的使用体验。<br>&emsp;&emsp;另一方面，即使热容相同，长尖头和短D头的使用体验也绝不相同。是否可以设置一个长短头的选项来告知控制器是否需要对失温进行过度补偿。对于长尖头来说，温度传感器处的1℃失温就可能代表着工作面10℃的失温，这和短D头完全不同，更为极端的是jbc吸锡器，在这种情况下，吸锡器的工作面与温度传感器之间的温差可能达到数十摄氏度。必须注意，回温针对的是<strong>温度传感器处的温度</strong>，而不是工作面的温度，因为控制器没有任何能力能够感知到工作面的温度。很多情况下，温度传感器可以如实地反映工作面的温度，有些情况下则不能。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/JBC/" rel="tag"><i class="fa fa-tag"></i> JBC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/08/14/%E7%9B%B4%E6%B5%81%E7%94%B5%E6%BA%90JBC%E7%84%8A%E5%8F%B0%E5%AE%8C%E5%85%A8%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%8D%97/" rel="next" title="直流电源JBC焊台完全设计指南">
+                  <i class="fa fa-chevron-left"></i> 直流电源JBC焊台完全设计指南
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#回温"><span class="nav-number">2.</span> <span class="nav-text">回温</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#回温的硬件基础"><span class="nav-number">2.1.</span> <span class="nav-text">回温的硬件基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回温的软件基础"><span class="nav-number">2.2.</span> <span class="nav-text">回温的软件基础</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#温控算法改进"><span class="nav-number">3.</span> <span class="nav-text">温控算法改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#针对软件的改进"><span class="nav-number">3.1.</span> <span class="nav-text">针对软件的改进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#针对硬件的改进"><span class="nav-number">3.2.</span> <span class="nav-text">针对硬件的改进</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Gavin Ou"
+    src="/images/poohbear.jpg">
+  <p class="site-author-name" itemprop="name">Gavin Ou</p>
+  <div class="site-description" itemprop="description">多看书 多思考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gavin Ou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">29k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">52 分钟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme: 'forest',
+      logLevel: 3,
+      flowchart: { curve: 'linear' },
+      gantt: { axisFormat: '%m/%d/%Y' },
+      sequence: { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
