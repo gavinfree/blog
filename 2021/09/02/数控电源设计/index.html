@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-material.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.3',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="俺最近对数控电源产生了很大的兴趣，因此对数控电源的恒压、恒流模式进行了一定的研究……">
+<meta name="keywords" content="数控电源">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数控电源设计">
+<meta property="og:url" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;index.html">
+<meta property="og:site_name" content="费曼学习博客">
+<meta property="og:description" content="俺最近对数控电源产生了很大的兴趣，因此对数控电源的恒压、恒流模式进行了一定的研究……">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_OpvaTRGcxm.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;PDFXEdit_LZ2ZkRl5R2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_ggUKheHeH1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_IsdbFE6OT2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_XlamLY7xMT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_wqReVvA9TA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_Pu3DKWW6iN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_oueyP4W5Wm.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;PDFXEdit_1Rc0lacWNe.png">
+<meta property="og:updated_time" content="2021-09-02T05:00:39.507Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;gavinfree.gitee.io&#x2F;2021&#x2F;09&#x2F;02&#x2F;%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1&#x2F;chrome_OpvaTRGcxm.png">
+
+<link rel="canonical" href="https://gavinfree.gitee.io/2021/09/02/%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>数控电源设计 | 费曼学习博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">费曼学习博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gavinfree.gitee.io/2021/09/02/%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/poohbear.jpg">
+      <meta itemprop="name" content="Gavin Ou">
+      <meta itemprop="description" content="多看书 多思考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="费曼学习博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数控电源设计
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-02 09:57:38 / 修改时间：13:00:39" itemprop="dateCreated datePublished" datetime="2021-09-02T09:57:38+08:00">2021-09-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DIY/" itemprop="url" rel="index">
+                    <span itemprop="name">DIY</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>俺最近对数控电源产生了很大的兴趣，因此对数控电源的恒压、恒流模式进行了一定的研究……</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="0x00-必需知识"><a href="#0x00-必需知识" class="headerlink" title="0x00 必需知识"></a>0x00 必需知识</h1><p>模电基础</p>
+<h1 id="0x01-数控电源的作用"><a href="#0x01-数控电源的作用" class="headerlink" title="0x01 数控电源的作用"></a>0x01 数控电源的作用</h1><p>数控电源可以以一定步进值产生输出电压和输出电流，对于DIY爱好者来说很重要。因此探究数控电源的构成能提升对数控电源运作方式的理解，方便DIY。</p>
+<h1 id="0x02-数控电源的构成"><a href="#0x02-数控电源的构成" class="headerlink" title="0x02 数控电源的构成"></a>0x02 数控电源的构成</h1><p>比较简单的数控电源都采用BUCK降压电路，一般有两种设计方式。第一种完全使用单片机进行控制，单片机采集输出的ADC值，并经过控制算法，改变输出PWM的占空比，驱动外置mos半桥工作。第二种采用现有的BUCK芯片，只是通过一定的方式接入芯片的FB引脚，以对调压过程进行影响。一般来说，第二种方式的设计更为简单，因为控制及反馈的电路都由芯片公司设计完成，不需要DIYer考虑，而这些部分往往需要很多的设计经验。但是在某些应用中，采用单片机控制也不失为一种很好的方式。例如，在VFD应用中，需要产生一个60~80V的高压，如果不采用变压器方案就需要采用BOOST电路，但是这种高压芯片价格比较昂贵。此时只需要单片机直接控制开关MOS管，采用开环设计。因为VFD的高压是为了形成电场，不消耗很多电流，开环设计已经足够。本篇文章中，俺只打算讨论采用现成BUCK芯片和电路的设计数控电源。</p>
+<h2 id="0x01-BUCK电路结构"><a href="#0x01-BUCK电路结构" class="headerlink" title="0x01 BUCK电路结构"></a>0x01 BUCK电路结构</h2><p><img src="chrome_OpvaTRGcxm.png" alt=""></p>
+<p>一个典型的基于XL4016的BUCK电路如图所示。R2和R1构成反馈网络，将输出电压反馈到芯片的FB引脚中。4016的内部框图如下：</p>
+<p><img src="PDFXEdit_LZ2ZkRl5R2.png" alt=""></p>
+<p>可以看到FB引脚进入到一个ErrorAmplifier（误差放大器），与芯片内部的1.25V参考电压进行比较，输出结果与锯齿波进行比较，进而驱动内部MOS改变电路工作状态。对于这个电路来说，最终要达到平衡的条件是，FB引脚的电压等于1.25V，因此可以得到输出电压表达式：$V_{OUT}= V_{FB} *(1+\frac{R_{2} }{R_{1} } )$</p>
+<h2 id="0x02-控制电路修改"><a href="#0x02-控制电路修改" class="headerlink" title="0x02 控制电路修改"></a>0x02 控制电路修改</h2><p>为使得这个电路可以被单片机控制，需要使用DAC对FB引脚施加控制，采用电路如下所示：</p>
+<p><img src="chrome_ggUKheHeH1.png" alt=""></p>
+<p>此时输出电压为$(V_{OUT}-V_{FB})/R_{2}+(V_{DAC}-V_{FB})/R_{3} =V_{FB}/R_{1}$ 这个式子使得单片机可以通过DAC控制输出电压。当然，这只是单片机通过DAC控制输出电压的一种方式，此外还有许多可以达到目的的电路。</p>
+<p><img src="chrome_IsdbFE6OT2.png" alt=""></p>
+<p>在这个电路中，$V_{DAC}+V_{fb}=V_{o}$ </p>
+<p><img src="chrome_XlamLY7xMT.png" alt=""></p>
+<p>在这个电路中，$V_{o}=(V_{DAC}-V_{FB})*\frac{R_{4} }{R_{1} } +V_{ref}$ </p>
+<p>可以看到，DAC接入控制电路的方式多种多样，可以达到的效果也有很多，有的结构可调输出最小电压为FB的参考电压，而有的结构可以从0V开始输出，可以根据需要设计对应的电路。</p>
+<p>这种控制方式最终达到的平衡效果是FB引脚的电压等于内部参考电压，还有另外一种控制方式是单纯将FB作为工作开关，进行控制。以基于3R33模块的数控电源电路为例</p>
+<p><img src="chrome_wqReVvA9TA.png" alt=""></p>
+<p>这个电路实现了恒压恒流，具体实现是将输出电压分压与DAC输出进行比较，运放工作在比较器模式，当输出电压超过控制值时，比较器输出5V，通过一个二极管构成的或门输入ADJ端。此电路已经对3R33模块进行处理</p>
+<p><img src="chrome_Pu3DKWW6iN.png" alt=""></p>
+<p>拆除的三个元件分别是一个输出端的稳压管和两个并联的输出反馈电阻上臂，则实际电路变为</p>
+<p><img src="chrome_oueyP4W5Wm.png" alt=""></p>
+<p>当比较器输出5V时，FB脚的分压大致为3.5V，3R33模块使用的芯片是MP2307，它的框图如下所示</p>
+<p><img src="PDFXEdit_1Rc0lacWNe.png" alt=""></p>
+<p>可以看到，当FB输入3V时，会触发OVP，整个芯片停机，输出电压就会下降。而当比较器输出0V时，FB脚被下拉到0V，芯片开始工作。由此实现恒压输出，恒流原理类似，只是需要注意要先将采样电阻的电压进行放大。两个二极管构成的或门实现了恒压恒流的功能以及自动切换。但是需要注意的是，当FB脚电压为0V时，内部振荡频率会变成较低的110kHz，从这个角度来看，这种控制方式可能会使得芯片工作效率比较低，也可能带来电感饱和的问题，这个需要使用者注意。</p>
+<h1 id="0x03-由PWM产生DAC"><a href="#0x03-由PWM产生DAC" class="headerlink" title="0x03 由PWM产生DAC"></a>0x03 由PWM产生DAC</h1><p>不管是哪种方式，都可以看到DAC在这个控制电路中都是不可或缺的一部分，为实现DAC功能，部分单片机会自带多路DAC输出，也可以外挂DAC芯片，但是这两种方法都会带来额外的开销，一种比较经济的做法是由单片机自带的PWM输出功能经过低通滤波之后实现DAC功能。具体详细的设计可以参考这个<a href="http://news.eeworld.com.cn/mp/ZLG/a23584.jspx" target="_blank" rel="noopener">网址</a>。一般来说，使用PWM产生DAC，在DNL,INL,分辨率方面与专用芯片差距不大，但是建立时间相比于专用DAC芯片会大很多，需要根据实际设计取舍。</p>
+<h1 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h1><p>由以上的电路已经足够设计一个恒压恒流电路，注意控制电路的稳定裕度，防止电路自激之后，就可以做成一个简单的具有恒压恒流功能的数控电源。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8E%A7%E7%94%B5%E6%BA%90/" rel="tag"><i class="fa fa-tag"></i> 数控电源</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2021/09/01/AD%E7%94%9F%E6%88%90gerber/" rel="next" title="AD生成gerber">
+                  <i class="fa fa-chevron-left"></i> AD生成gerber
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-必需知识"><span class="nav-number">1.</span> <span class="nav-text">0x00 必需知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-数控电源的作用"><span class="nav-number">2.</span> <span class="nav-text">0x01 数控电源的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-数控电源的构成"><span class="nav-number">3.</span> <span class="nav-text">0x02 数控电源的构成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-BUCK电路结构"><span class="nav-number">3.1.</span> <span class="nav-text">0x01 BUCK电路结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-控制电路修改"><span class="nav-number">3.2.</span> <span class="nav-text">0x02 控制电路修改</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-由PWM产生DAC"><span class="nav-number">4.</span> <span class="nav-text">0x03 由PWM产生DAC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-总结"><span class="nav-number">5.</span> <span class="nav-text">0x04 总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Gavin Ou"
+    src="/images/poohbear.jpg">
+  <p class="site-author-name" itemprop="name">Gavin Ou</p>
+  <div class="site-description" itemprop="description">多看书 多思考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gavin Ou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">32k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">59 分钟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme: 'forest',
+      logLevel: 3,
+      flowchart: { curve: 'linear' },
+      gantt: { axisFormat: '%m/%d/%Y' },
+      sequence: { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>
